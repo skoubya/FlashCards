@@ -1,0 +1,5 @@
+- deal with options jumping back to start if an invalid option is chosen
+- make FlashCards open files with info (instead of each having its own class)
+- implement GUI
+  - have ability to create flashcards
+- maybe save where left off in the flashcards
