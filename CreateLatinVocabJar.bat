@@ -1,1 +1,1 @@
-jar cvmf mainclass.txt LatinVocab.jar LatinVocab.class FlashCards.class
+jar cvmf mainclass.txt LatinVocab.jar FlashCardGUI.class FlashCards.class

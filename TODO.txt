@@ -4,3 +4,5 @@
   - have ability to create flashcards
 - maybe save where left off in the flashcards
   - bitmask w/ bit position corresponding to position of card in the list
+- maybe actually take things out of the list
+- organize code

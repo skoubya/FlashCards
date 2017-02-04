@@ -9,6 +9,7 @@ public class FlashCards{
 	private ArrayList<String[]> card;
 	private boolean[] right;
 	private int count;
+	private int currIndex;
 
 	Scanner in = new Scanner (System.in);
 	Random randGen = new Random();
@@ -16,11 +17,15 @@ public class FlashCards{
 	public FlashCards (ArrayList<String[]> word){
 		card = word;
 		right = new boolean[card.size()];
+		currIndex = 0;
+		count = card.size();
 	}
 	
 	public FlashCards (String[][] word){
 		card = new ArrayList<String[]>(Arrays.asList(word));
 		right = new boolean[card.size()];
+		currIndex = 0;
+		count = card.size();
 	}
 	
 	public FlashCards (FileReader file){
@@ -63,6 +68,8 @@ public class FlashCards{
 			cardParts[1] = "";
 		}
 		right = new boolean[card.size()];
+		currIndex = 0;
+		count = card.size();
 	}
 
 	public boolean allGone (){
@@ -73,6 +80,30 @@ public class FlashCards{
 		}
 		return true;
 	}
+	
+	public void getNewCard(){
+		do{
+			currIndex = randGen.nextInt (card.size());
+		}
+		while (right[currIndex]);
+	}
+	
+	public String getFront(){
+		return card.get(currIndex)[0];
+	}
+	
+	public String getBack(){
+		return card.get(currIndex)[1];
+	}
+	
+	public int getNumLeft(){
+		return count;
+	}
+	
+	public void cardCorrect(){
+		right[currIndex] = true;
+		count--;
+	}
 
 	public void learn (){
 		for (int x = 0; x < right.length; x++){
@@ -82,11 +113,7 @@ public class FlashCards{
 		int choice;
 
 		do{ //catch to make invalid options loop to the right question
-			int index;
-			do{
-				index = randGen.nextInt (card.size());
-			}
-			while (right[index]);
+			getNewCard();
 			System.out.println ("Choose an option:");
 			System.out.println ("[1] View term first");
 			System.out.println ("[2] View definition first");
@@ -103,7 +130,7 @@ public class FlashCards{
 			System.out.println ();
 
 			switch (choice){
-				case 1: System.out.println (card.get(index)[0]);
+				case 1: System.out.println (getFront());
 				        System.out.println ();
 				        System.out.println ("Choose an option:");
 				        System.out.println ("[1] Show definition");
@@ -117,7 +144,7 @@ public class FlashCards{
 						}
 				        switch (choice){
 				        	case 1: System.out.println ();
-				        			System.out.println (card.get(index)[1]);
+				        			System.out.println (getBack());
 				        			System.out.println ();
 				        			System.out.println ("Choose an option:");
 				        			System.out.println ("[1] Take out of deck");
@@ -130,7 +157,7 @@ public class FlashCards{
 										choice = 999;
 									}
 				        			switch (choice){
-										case 1: right[index] = true;
+										case 1: cardCorrect();
 												break;
 										case 2: break;
 										default: System.out.println ("Invalid option. Try again.");
@@ -142,7 +169,7 @@ public class FlashCards{
 				        	         break;
 						}
 					    break;
-				case 2: System.out.println (card.get(index)[1]);
+				case 2: System.out.println (getBack());
 				        System.out.println ();
 				        System.out.println ("Choose an option:");
 				        System.out.println ("[1] Show term");
@@ -156,7 +183,7 @@ public class FlashCards{
 						}
 				        switch (choice){
 				        	case 1: System.out.println ();
-				        			System.out.println (card.get(index)[0]);
+				        			System.out.println (getFront());
 				        			System.out.println ();
 				        			System.out.println ("Choose an option:");
 				        			System.out.println ("[1] Take out of deck");
@@ -169,7 +196,7 @@ public class FlashCards{
 										choice = 999;
 									}
 				        			switch (choice){
-										case 1: right[index] = true;
+										case 1: cardCorrect();
 												break;
 										case 2: break;
 										default: System.out.println ("Invalid option. Try again.");
@@ -185,13 +212,7 @@ public class FlashCards{
 							System.out.println (card.get(r)[0] + "-- " + card.get(r)[1]);
 						}
 					    break;
-				case 4: count = 0;
-						for (int r = 0; r < card.size(); r++){
-							if (!right[r]){
-								count++;
-							}
-						}
-						System.out.println (count);
+				case 4: System.out.println (count);
 					    break;
 				case -1: System.out.println ("Bye");
 					     break;

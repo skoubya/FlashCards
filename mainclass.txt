@@ -1,2 +1,2 @@
-Main-Class: LatinVocab
+Main-Class: FlashCardGUI
 Class-Path: .
