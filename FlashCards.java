@@ -1,48 +1,90 @@
 import java.util.Scanner;
 import java.util.Random;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.InputMismatchException;
-public class FlashCards
-{
-	private String[][] card;
+import java.io.FileReader;
+import java.io.IOException;
+public class FlashCards{
+	private ArrayList<String[]> card;
 	private boolean[] right;
 	private int count;
 
 	Scanner in = new Scanner (System.in);
 	Random randGen = new Random();
 
-	public FlashCards (String[][] word)
-	{
+	public FlashCards (ArrayList<String[]> word){
 		card = word;
-		right = new boolean[card.length];
+		right = new boolean[card.size()];
+	}
+	
+	public FlashCards (String[][] word){
+		card = new ArrayList<String[]>(Arrays.asList(word));
+		right = new boolean[card.size()];
+	}
+	
+	public FlashCards (FileReader file){
+		card = new ArrayList<String[]>();
+		String currStr = "";
+		String cardParts[] = {"",""};
+		//String cardP2 = "";
+		char currChar = 0;
+		int readInt = -1;
+		boolean isPart1 = true;
+		boolean started = false;
+		try {while((readInt = file.read()) != -1){
+			currChar = (char)readInt;
+			switch (currChar){ //TODO: Deal with special chars
+				case '"': 	started = !started;
+							if (!started){ //because flipped
+								if (isPart1){
+									cardParts[0] = currStr;
+								}
+								else{
+									cardParts[1] = currStr;
+								}
+								currStr = "";
+								isPart1 = !isPart1;
+							}
+							break;
+				case '\n':	card.add(new String[]{cardParts[0],cardParts[1]});
+							cardParts[0] = "";
+							cardParts[1] = "";
+							break;
+				default:	if (started) currStr += currChar;
+			}
+		}}
+		catch (IOException e){
+			System.out.println(e.toString());
+		}
+		if ((cardParts[0] != "") && (cardParts[1] != "")){
+			card.add(new String[]{cardParts[0],cardParts[1]});
+			cardParts[0] = "";
+			cardParts[1] = "";
+		}
+		right = new boolean[card.size()];
 	}
 
-	public boolean allGone ()
-	{
-		for (int x = 0; x < right.length; x++)
-		{
-			if (!right[x])
-			{
+	public boolean allGone (){
+		for (int x = 0; x < right.length; x++){
+			if (!right[x]){
 				return false;
 			}
 		}
 		return true;
 	}
 
-	public void learn ()
-	{
-		for (int x = 0; x < right.length; x++)
-		{
+	public void learn (){
+		for (int x = 0; x < right.length; x++){
 			right[x] = false;
 		}
 
 		int choice;
 
-		do //catch to make invalid options loop to the right question
-		{
+		do{ //catch to make invalid options loop to the right question
 			int index;
-			do
-			{
-				index = randGen.nextInt (card.length);
+			do{
+				index = randGen.nextInt (card.size());
 			}
 			while (right[index]);
 			System.out.println ("Choose an option:");
@@ -51,52 +93,43 @@ public class FlashCards
 			System.out.println ("[3] List all terms and definitions");
 			System.out.println ("[4] Number of cards left");
 			System.out.println ("[-1] Quit");
-			try
-			{
+			try{
 				choice = in.nextInt();
 			}
-			catch (InputMismatchException e)
-			{
+			catch (InputMismatchException e){
 				in.nextLine ();
 				choice = 999;
 			}
 			System.out.println ();
 
-			switch (choice)
-			{
-				case 1: System.out.println (card[index][0]);
+			switch (choice){
+				case 1: System.out.println (card.get(index)[0]);
 				        System.out.println ();
 				        System.out.println ("Choose an option:");
 				        System.out.println ("[1] Show definition");
 				        System.out.println ("[2] Back to main menu");
-				        try
-						{
+				        try{
 							choice = in.nextInt();
 						}
-						catch (InputMismatchException e)
-						{
+						catch (InputMismatchException e){
 							in.nextLine ();
 							choice = 999;
 						}
-				        switch (choice)
-				        {
+				        switch (choice){
 				        	case 1: System.out.println ();
-				        			System.out.println (card[index][1]);
+				        			System.out.println (card.get(index)[1]);
 				        			System.out.println ();
 				        			System.out.println ("Choose an option:");
 				        			System.out.println ("[1] Take out of deck");
 				        			System.out.println ("[2] Keep in deck");
-			    					try
-									{
+			    					try{
 										choice = in.nextInt();
 									}
-									catch (InputMismatchException e)
-									{
+									catch (InputMismatchException e){
 										in.nextLine ();
 										choice = 999;
 									}
-				        			switch (choice)
-				        			{
+				        			switch (choice){
 										case 1: right[index] = true;
 												break;
 										case 2: break;
@@ -109,39 +142,33 @@ public class FlashCards
 				        	         break;
 						}
 					    break;
-				case 2: System.out.println (card[index][1]);
+				case 2: System.out.println (card.get(index)[1]);
 				        System.out.println ();
 				        System.out.println ("Choose an option:");
 				        System.out.println ("[1] Show term");
 				        System.out.println ("[2] Back to main menu");
-			  			try
-						{
+			  			try{
 							choice = in.nextInt();
 						}
-						catch (InputMismatchException e)
-						{
+						catch (InputMismatchException e){
 							in.nextLine ();
 							choice = 999;
 						}
-				        switch (choice)
-				        {
+				        switch (choice){
 				        	case 1: System.out.println ();
-				        			System.out.println (card[index][0]);
+				        			System.out.println (card.get(index)[0]);
 				        			System.out.println ();
 				        			System.out.println ("Choose an option:");
 				        			System.out.println ("[1] Take out of deck");
 				        			System.out.println ("[2] Keep in deck");
-									try
-									{
+									try{
 										choice = in.nextInt();
 									}
-									catch (InputMismatchException e)
-									{
+									catch (InputMismatchException e){
 										in.nextLine ();
 										choice = 999;
 									}
-				        			switch (choice)
-				        			{
+				        			switch (choice){
 										case 1: right[index] = true;
 												break;
 										case 2: break;
@@ -154,16 +181,13 @@ public class FlashCards
 				        	         break;
 						}
 					    break;
-				case 3: for (int r = 0; r < card.length; r++)
-						{
-							System.out.println (card[r][0] + "-- " + card[r][1]);
+				case 3: for (int r = 0; r < card.size(); r++){
+							System.out.println (card.get(r)[0] + "-- " + card.get(r)[1]);
 						}
 					    break;
 				case 4: count = 0;
-						for (int r = 0; r < card.length; r++)
-						{
-							if (!right[r])
-							{
+						for (int r = 0; r < card.size(); r++){
+							if (!right[r]){
 								count++;
 							}
 						}

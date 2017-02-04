@@ -1,3 +1,6 @@
+import java.io.FileReader;
+import java.io.FileNotFoundException;
+
 public class LatinVocab
 {
 	public static void main (String[] args)
@@ -129,7 +132,11 @@ public class LatinVocab
 		                    {"voco, vocare, vocavi, vocantus","to call"},
 		                    {"vox, vocis","feminine: voice, utterance, word"}};
 
-		FlashCards latin = new FlashCards (card);
-		latin.learn ();
+		try{
+			FlashCards latin = new FlashCards (new FileReader("LatinVocab.vcb"));//(card);
+			latin.learn ();
+		}
+		catch (FileNotFoundException e){
+		}
 	}
 }
