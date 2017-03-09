@@ -1,5 +1,6 @@
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.File;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -8,6 +9,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.scene.text.Text;
 import javafx.scene.layout.GridPane;
 import javafx.geometry.HPos;
@@ -60,7 +63,6 @@ public class FlashCardGUI extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 				words.setText("Not yet"); //TODO: actually do
-				//grid.getChildren().remove(listAll);
 			}
 		});
 		
@@ -70,8 +72,7 @@ public class FlashCardGUI extends Application {
  
 			@Override
 			public void handle(ActionEvent event) {
-				words.setText(Integer.toString(deck.getNumLeft())+" cards left"); //TODO: actually do
-				//grid.getChildren().remove(numLeft);
+				words.setText(Integer.toString(deck.getNumLeft())+" cards left");
 			}
 		});
 		
@@ -210,7 +211,7 @@ public class FlashCardGUI extends Application {
 	}
 	
 	@Override
-	public void start(Stage pStage) {
+	public void start(Stage pStage) {		
 		primaryStage = pStage;
 		StackPane root = new StackPane();
 		grid.setAlignment(Pos.CENTER);
@@ -218,8 +219,23 @@ public class FlashCardGUI extends Application {
 
 		words = new Text();
 		
+		//select a file
+		// TODO: Move to own function (ativated by a button)
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.setTitle("Open Flashcard Deck");
+		fileChooser.getExtensionFilters().addAll(
+				new ExtensionFilter("Flashcard Files (*.vcb)", "*.vcb"),
+				new ExtensionFilter("All Files", "*.*")); //TODO: maybe remove (don't want any type of file)
+		File deckFile = fileChooser.showOpenDialog(primaryStage);
+		
+		//TODO: make more robust
+		if(deckFile == null){
+			System.err.println("Should have put a file");
+			return;
+		}
+		
 		try{
-			deck = new FlashCards (new FileReader("LatinVocab.vcb"));
+			deck = new FlashCards (new FileReader(deckFile));
 			deck.getNewCard();
 		}
 		catch (FileNotFoundException e){

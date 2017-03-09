@@ -1,8 +1,9 @@
-- deal with options jumping back to start if an invalid option is chosen
+- deal with options jumping back to start if an invalid option is chosen (in command line)
 - make FlashCards open files with info (instead of each having its own class)
-- implement GUI
-  - have ability to create flashcards
+- have ability to create flashcards
 - maybe save where left off in the flashcards
   - bitmask w/ bit position corresponding to position of card in the list
 - maybe actually take things out of the list
 - organize code
+- ability to choose where to load from
+- be able to click on .vcb file and run the program
