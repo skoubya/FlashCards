@@ -210,17 +210,8 @@ public class FlashCardGUI extends Application {
 		//grid.setGridLinesVisible(true);
 	}
 	
-	@Override
-	public void start(Stage pStage) {		
-		primaryStage = pStage;
-		StackPane root = new StackPane();
-		grid.setAlignment(Pos.CENTER);
-		//grid.setGridLinesVisible(true);
-
-		words = new Text();
-		
+	private void setDeckFile(){
 		//select a file
-		// TODO: Move to own function (ativated by a button)
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Open Flashcard Deck");
 		fileChooser.getExtensionFilters().addAll(
@@ -242,6 +233,18 @@ public class FlashCardGUI extends Application {
 			System.err.println(e.toString());
 			return;
 		}
+	}
+	
+	@Override
+	public void start(Stage pStage) {		
+		primaryStage = pStage;
+		StackPane root = new StackPane();
+		grid.setAlignment(Pos.CENTER);
+		//grid.setGridLinesVisible(true);
+
+		setDeckFile();
+		
+		words = new Text();
 		
 		createButtons();		
 		showMainMenu();
