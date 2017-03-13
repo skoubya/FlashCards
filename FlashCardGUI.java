@@ -24,7 +24,7 @@ import javafx.geometry.Pos;
 public class FlashCardGUI extends Application {
 	private Stage primaryStage;
 	private GridPane grid = new GridPane();
-	private FlashCards deck;
+	private FlashCards deck = null;
 	private Text words;
 	private Button front1st;
 	private Button back1st;
@@ -252,6 +252,9 @@ public class FlashCardGUI extends Application {
 		itemOpen.setOnAction(new EventHandler<ActionEvent>() {
 			@Override public void handle(ActionEvent e) {
 				setDeckFile();
+				if(deck != null){
+					showMainMenu();
+				}
 			}
 		});
 		MenuItem itemNew = new MenuItem("New");
@@ -274,7 +277,6 @@ public class FlashCardGUI extends Application {
 		words = new Text();
 		
 		createButtons();		
-		showMainMenu();
 		
 		root.getChildren().addAll(menuBar, grid);
 		
