@@ -7,12 +7,16 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.scene.text.Text;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 
@@ -217,6 +221,7 @@ public class FlashCardGUI extends Application {
 		fileChooser.getExtensionFilters().addAll(
 				new ExtensionFilter("Flashcard Files (*.vcb)", "*.vcb"),
 				new ExtensionFilter("All Files", "*.*")); //TODO: maybe remove (don't want any type of file)
+		fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
 		File deckFile = fileChooser.showOpenDialog(primaryStage);
 		
 		//TODO: make more robust
@@ -238,21 +243,43 @@ public class FlashCardGUI extends Application {
 	@Override
 	public void start(Stage pStage) {		
 		primaryStage = pStage;
-		StackPane root = new StackPane();
+		VBox root = new VBox();
 		grid.setAlignment(Pos.CENTER);
 		//grid.setGridLinesVisible(true);
-
-		setDeckFile();
+		
+		final Menu fileMenu = new Menu("File");
+		MenuItem itemOpen = new MenuItem("Open");
+		itemOpen.setOnAction(new EventHandler<ActionEvent>() {
+			@Override public void handle(ActionEvent e) {
+				setDeckFile();
+			}
+		});
+		MenuItem itemNew = new MenuItem("New");
+		itemNew.setOnAction(new EventHandler<ActionEvent>() {
+			@Override public void handle(ActionEvent e) {
+				//TODO: Create file
+			}
+		});
+		MenuItem itemSave = new MenuItem("Save");
+		itemSave.setOnAction(new EventHandler<ActionEvent>() {
+			@Override public void handle(ActionEvent e) {
+				//TODO: Save File
+			}
+		});
+		
+		fileMenu.getItems().addAll(itemNew,itemOpen,itemSave);
+		MenuBar menuBar = new MenuBar();
+		menuBar.getMenus().addAll(fileMenu);
 		
 		words = new Text();
 		
 		createButtons();		
 		showMainMenu();
 		
-		root.getChildren().add(grid);
+		root.getChildren().addAll(menuBar, grid);
 		
 		Scene scene = new Scene(root, 400, 250);
-
+		
 		primaryStage.setTitle("Flash Cards");
 		primaryStage.setScene(scene);
 		primaryStage.show();
